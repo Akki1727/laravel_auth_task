@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Users_profile extends Model
+class UserProfile extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -15,4 +15,8 @@ class Users_profile extends Model
         'profile_photo',
         'birth_date'
     ];
+
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
 }

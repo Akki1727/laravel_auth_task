@@ -9,7 +9,8 @@
 </head>
 
 <body>
-  <form action="{{route('userprofile.store',$useredit->id)}}" method="post" enctype="multipart/form-data">
+  <form action="{{route('userprofile.update',$useredit->id)}}" method="post" enctype="multipart/form-data">
+    @method('PUT')
     @csrf
     <table border="1">
       <tr>
@@ -32,7 +33,7 @@
       </tr>
       <tr>
         <td>
-          <label for="name">Gender:</label>{{$userid->gender}}
+          <label for="name">Gender:</label>
         </td>
         <td>
           <input type="radio" name="gender" id="male" value="male">Male
@@ -44,7 +45,7 @@
           <label for="address">Address:</label>
         </td>
         <td>
-          <textarea name="address" id="address" cols="20" rows="2" >{{$userid->address}}</textarea>
+          <textarea name="address" id="address" cols="20" rows="2"></textarea>
         </td>
       </tr>
       <tr>
@@ -69,7 +70,7 @@
       </tr>
     </table><br>
 
-    <input type="submit" name="submit" value="Submit">
+    <input type="submit" name="submit" value="Update">
 
 
 

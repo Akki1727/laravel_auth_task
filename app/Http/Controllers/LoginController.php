@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Authenticatable;
 
 class LoginController extends Controller
 {
@@ -40,11 +41,12 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+        // dd($credentials);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('welcome');
+            return redirect()->intended('userprofile');
         };
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

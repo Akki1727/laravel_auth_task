@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 // use App\Http\Controllers\hash;
-use App\Models\Users;
+// use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -17,6 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
+       
         return view('Users');
     }
 
@@ -27,7 +30,6 @@ class UserController extends Controller
      */
     public function create()
     {
-       
     }
 
     /**
@@ -38,13 +40,13 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-         $data = [
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ];
 
-        Users::create($data);
+        User::create($data);
         return redirect('login');
     }
 
