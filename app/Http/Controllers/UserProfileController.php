@@ -110,6 +110,7 @@ class UserProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $useredit = Auth::user();
         $userid = ModelsUserProfile::findOrFail($id);
 
         // dd($userid);
@@ -132,8 +133,9 @@ class UserProfileController extends Controller
         $userid->update($updatedata);
         // dd($userid);
         // $userprofile = ModelsUserProfile::find($result->id);
-        $useredit = Auth::user();
-        return view('userprofile',compact(['useredit','userid']));
+        // dd($userid);
+        // dd($userid);
+        return view('userprofileupdateshow',compact(['useredit','userid']));
 
 
     }

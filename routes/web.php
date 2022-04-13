@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -29,4 +30,5 @@ Route::resource('login',LoginController::class);
 Route::resource('forgotpassword',ForgotPasswordController::class);
 Route::resource('resetpassword',ResetPasswordController::class);
 Route::resource('userprofile',UserProfileController::class);
+Route::resource('posts',PostController::class);
 

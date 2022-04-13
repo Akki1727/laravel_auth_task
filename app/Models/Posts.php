@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Posts extends Model
 {
     use HasFactory;
-    protected $fillabe = [
+    protected $fillable = [
         'user_id',
         'title',
         'description',
         'post_icon',
     ];
+
+    public function users(){
+        return $this->hasMany(User::class);
+    }
 }

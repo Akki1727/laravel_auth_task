@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens;
+ 
     
     protected $fillable = [
         'name',
@@ -19,4 +22,6 @@ class User extends Authenticatable
     public function usersprofile(){
         return $this->hasOne(UserProfile::class);
     }
+
+    
 }

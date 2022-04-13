@@ -6,6 +6,9 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -51,6 +54,16 @@ class LoginController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+
+        $token = $credentials->createToken('myapptoken')->plainTextToken;
+
+        return new JsonResponse(
+            [
+                'success' => true,
+                'token' => $token
+            ],
+            200
+        );
     }
 
     /**
