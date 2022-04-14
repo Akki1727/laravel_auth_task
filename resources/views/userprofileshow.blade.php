@@ -19,7 +19,7 @@
   <table border="1" class="table table-striped" style="width: 100%; text-align:center">
     <tr>
       <th scope="col">Id</th>
-      <th scope="col">User_Id</th>
+      <th scope="col">Name</th>
 
       <th scope="col">Gender</th>
       <th scope="col">Address</th>
@@ -29,7 +29,7 @@
     </tr>
     <tr>
       <td>{{$result->id}}</td>
-      <td>{{$userprofile->user_id}}</td>
+      <td>{{$authusername->name}}</td>
       <td>{{$userprofile->gender}}</td>
       <td>{{$userprofile->address}}</td>
       <td><img src="{{asset('/storage/posts/'.$result->profile_photo)}}" style="height: 100px; width: 150px;"></td>

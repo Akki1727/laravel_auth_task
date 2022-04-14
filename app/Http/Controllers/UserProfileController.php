@@ -2,24 +2,16 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\Users;
-// use App\Models\UserPr;
-
+use App\Http\Requests\UserProfileRequest;
 use App\Models\User;
-use App\Models\UserProfile as ModelsUserProfile;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use UserProfile;
-use App\Http\Controllers\Image;
-use Illuminate\Support\Facades\Storage;
+
 
 class UserProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
 
@@ -29,39 +21,22 @@ class UserProfileController extends Controller
         return view('userprofile', compact('useredit'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(UserProfileRequest $request)
     {
-        
 
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-       
         $usereditid = Auth::user()->id;
-       
+
         $validatedData = $request->validate([
             'profile_photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
 
         ]);
 
-       
+
 
         if ($request->file('profile_photo')) {
             $file = $request->file('profile_photo');
             $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(storage_path('app/public/images'), $filename);
+            $file->move(storage_path('app/public/images/'), $filename);
         }
         // dd($filename);
         $data = [
@@ -72,32 +47,20 @@ class UserProfileController extends Controller
             'birth_date' => $request->birth_date
         ];
 
+        $result = UserProfile::create($data);
+        $userprofile = UserProfile::find($result->id);
+        $authusername = Auth::user();
+        // dd($authusername);
 
-
-
-        $result = ModelsUserProfile::create($data);
-        $userprofile = ModelsUserProfile::find($result->id);
-        
-        return view('userprofileshow', compact(['result', 'userprofile']));
+        return view('userprofileshow', compact(['result', 'userprofile', 'authusername']));
     }
 
-    
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-       
+
         $useredit = Auth::user();
-        $useredit1 = ModelsUserProfile::findOrFail($id);
+        $useredit1 = UserProfile::findOrFail($id);
         return view('userprofileupdate', compact(['useredit', 'useredit1']));
     }
 
@@ -111,14 +74,14 @@ class UserProfileController extends Controller
     public function update(Request $request, $id)
     {
         $useredit = Auth::user();
-        $userid = ModelsUserProfile::findOrFail($id);
-
+        $userid = User::find($id)->usersprofile;
+// return $id;
         // dd($userid);
 
         if ($request->file('profile_photo')) {
             $file = $request->file('profile_photo');
             $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move('public', $filename);
+            $file->move(storage_path('app/public/images/'), $filename);
         }
 
         $updatedata = [
@@ -135,10 +98,9 @@ class UserProfileController extends Controller
         // $userprofile = ModelsUserProfile::find($result->id);
         // dd($userid);
         // dd($userid);
-        return view('userprofileupdateshow',compact(['useredit','userid']));
-
-
+        return view('userprofileupdateshow', compact(['useredit', 'userid']));
     }
+
 
     /**
      * Remove the specified resource from storage.

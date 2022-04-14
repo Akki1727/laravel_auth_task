@@ -24,8 +24,8 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:50',
-            'description' => 'required',//|min:10|max:250',
+            'title' => 'required|max:10',
+            'description' => 'required|min:10|max:250',
             'post_icon' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
           
             // 'address'=>'required|max:250',
@@ -36,7 +36,7 @@ class PostRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'Max 50 word',
+            'title.required' => 'Max 10 word',
             'description.required' => 'Maximun 250 words Limit',
             // 'password.required' => 'enter max 8 char',
             'post_icon.required'=>'image must be required',

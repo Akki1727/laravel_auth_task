@@ -13,10 +13,16 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> 
   <title>Post View</title>
+  <style>
+    .btn{
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
-
+<a class="btn btn-primary" href="/posts/create">Create New Post</a>
   <table border="1" class="table table-hover table-striped table-borderless" style="width: 100%; text-align:center">
     <tr>
       <td>Id</td>
@@ -45,10 +51,7 @@
       </td>
     </tr>
     @endforeach
-    <tr>
-      <td><a class="btn btn-primary" href="/posts/create">Create New Post</a></td>
-      
-    </tr>
+    
   </table>
 
 </body>

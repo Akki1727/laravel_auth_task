@@ -41,47 +41,40 @@
 
 
       <label class="form-label" for="name">Gender:</label>
-
-
-      <input class="form-check-input" type="radio" name="gender" id="male" value="male">Male
+      <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>Male
       <input class="form-check-input" type="radio" name="gender" id="female" value="female">Female
-
-
     </div>
+    @error('gender')
+    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+    @enderror
+
     <div class="container-sm">
 
       <div class="input-group">
         <span class="input-group-text">Address</span>
-        <textarea class="form-control"  name="address" id="address" aria-label="With textarea"></textarea>
+        <textarea class="form-control" name="address" id="address" aria-label="With textarea" required></textarea>
       </div>
-
-     
-
-
-    </div>
-    <div class="container-sm">
-
-
-      <label class="form-label" for="userprofile">User Profile:</label>
-
-
-      <input class="form-control" type="file" name="profile_photo" id="profile_photo">
-
-      @error('image')
+      @error('address')
       <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
       @enderror
 
     </div>
     <div class="container-sm">
+      <label class="form-label" for="userprofile">User Profile:</label>
+      <input class="form-control" type="file" name="profile_photo" id="profile_photo">
 
+      @error('profile_photo')
+      <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+      @enderror
 
+    </div>
+    <div class="container-sm">
       <label class="form-label" for="birth_date">Birth Date:</label>
-
-
       <input class="form-control" type="date" name="birth_date" id="birth_date">
-
+      @error('birth_date')
+      <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+      @enderror
       <br>
-
       <input class="btn btn-primary" type="submit" name="submit" value="Submit">
     </div>
 
