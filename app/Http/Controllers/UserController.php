@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Models\UserProfile;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\DB;
 // use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\ResetPassword;
 
 class UserController extends Controller
 {
@@ -55,7 +58,7 @@ class UserController extends Controller
         ];
 
 
-        $data=User::create($user_input);
+        $data = User::create($user_input);
         if ($data) {
             $verify2 = DB::table('users')->where([
                 ['email', $request->all()['email']]
@@ -72,11 +75,9 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
                 'remember_token' => $pin
             ]);
-
-
         }
         // dd($pin);
-        
+
 
         Mail::to($request->email)->send(new VerifyEmail($pin));
         // dd($data);
@@ -91,77 +92,130 @@ class UserController extends Controller
             201
         );
 
-       
+
 
         // return redirect('login');
     }
 
+    public function pinindex()
+    {
+        return view('pin-verification');
+    }
+
     public function verifyEmail(Request $request)
     {
-        $validator = Validation::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'remember_token' => ['required'],
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->with(['message' => $validator->errors()]);
         }
-        $select = DB::table('users')
-            ->where('email', Auth::user()->email)
-            ->where('remember_token', $request->token);
-
-        if ($select->get()->isEmpty()) {
+        // return User::where('remember_token',$request->remember_token)->get();
+        $select = User::where('remember_token', $request->remember_token)->get();
+        // return $select->count();
+        if ($select->count() == 0) {
             return new JsonResponse(['success' => false, 'message' => "Invalid PIN"], 400);
         }
 
-        $select = DB::table('users')
-            ->where('email', Auth::user()->email)
-            ->where('remember_token', $request->token)
-            ->delete();
 
-        $user = User::find(Auth::user()->id);
-        $user->email_verified_at = Carbon::now()->getTimestamp();
+        $check = User::updateOrCreate(
+            ['remember_token' => $request->remember_token],
+            ['remember_token' => 'Verified'],
+        );
+
+        // return $check;
+
+        // return $user = User::where('id',$request->id)->get();
+        // $user->  = Carbon::now()->getTimestamp();
+        $check->save();
+
+        return view('login');
+    }
+
+
+    // public function reset_password()
+    // {
+    //     return view('reset-password');
+    // }
+
+
+    public function forgotpassword()
+    {
+        return view('forgot-password');
+    }
+
+
+    public function forgotpasswordvalidation()
+    {
+        $user = User::where('remember_token', $pin)->first();
+        if ($user) {
+            $email = $user->email;
+            return view('forgot-password', compact('email'));
+        }
+        return redirect()->route('forgot-password')->with('failed', 'Password reset link is expired');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->with('failed', 'Failed! email is not registered.');
+        }
+
+        $token = Str::random(60);
+
+        $user['remember_token'] = $token;
+
         $user->save();
 
-        return new JsonResponse(['success' => true, 'message' => "Email is verified"], 200);
+        Mail::to($request->email)->send(new ResetPassword($token));
+
+        if (Mail::failures() != 0) {
+            return back()->with('success', 'Success! password reset link has been sent to your email');
+        }
+        return back()->with('failed', 'Failed! there is some issue with email provider');
     }
 
-    public function resendPin(Request $request)
+    public function changepassword($token)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255'],
-        ]);
-
-        if ($validator->fails()) {
-            return new JsonResponse(['success' => false, 'message' => $validator->errors()], 422);
-        }
-
-        $verify =  DB::table('users')->where([
-            ['email', $request->all()['email']]
-        ]);
-
-        if ($verify->exists()) {
-            $verify->delete();
-        }
-
-        $token = random_int(100000, 999999);
-        $password_reset = DB::table('users')->insert([
-            'email' => $request->all()['email'],
-            'token' =>  $token,
-            'created_at' => Carbon::now()
-        ]);
-
-        if ($password_reset) {
-            Mail::to($request->all()['email'])->send(new VerifyEmail($token));
-
-            return new JsonResponse(
-                [
-                    'success' => true,
-                    'message' => "A verification mail has been resent"
-                ],
-                200
-            );
-        }
+        return view('change-password',['token'=>$token]);
     }
+
+    public function updatePassword(Request $request)
+    {
+        $this->validate($request, [
+            'remember_token' => 'required',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password'
+        ]);
+        // return $request->all();
+
+        $user = User::where('remember_token', $request->remember_token)->get();
+        // return $user;
+        $id=  $user[0]->id;
+        if ($user) {
+            // $user['is_verified'] = 0;
+
+            $newuser = User::find($id);
+            // return $newuser;
+
+           
+            $newuser['remember_token'] = '';
+            $newuser['password'] = Hash::make($request->password);
+            $newuser->save();
+            // return $newuser;
+            return redirect('/login')->with('success', 'Success! password has been changed');
+        }
+        return redirect()->route('forgot-password')->with('failed', 'Failed! something went wrong');
+    }
+
+
+
 
 
 

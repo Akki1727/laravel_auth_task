@@ -4,7 +4,7 @@
 Thank you for signing up. 
 Your six-digit code is {{$pin}}
 
-<a href="{{route('login.index')}}">Click Hear</a>
+<a href="http://127.0.0.1:8000/pin-verification">Click Hear</a>
 
 @component('mail::button', ['url' => ''])
 Button Text
