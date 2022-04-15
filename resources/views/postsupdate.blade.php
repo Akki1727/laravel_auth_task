@@ -9,7 +9,7 @@
     <div class="col-md-8 col-md-offset-2">
 
       <h1>Create post</h1>
-      
+
       <form action="{{route('posts.update',$postedit->id)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('patch')
@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
           <label for="description">New Post Icon</label>
-          <input type="file" name="post_icon" id="post_icon">
+          <input type="file" name="post_icon" id="post_icon" src="{{asset('/storage/posts/'.$postedit->post_icon)}}">
         </div>
 
         <div class="form-group">

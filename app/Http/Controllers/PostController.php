@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Posts;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -15,8 +16,11 @@ class PostController extends Controller
     {
         $userid = Auth::user()->id;
         $data = Posts::all()->where("user_id", $userid);
+
+
+
         // dd($data->toArray());
-        return view('postview', compact(['data', 'userid']));
+        return view('postview', compact(['data', 'userid']))->with('no',1);
     }
 
 
@@ -62,23 +66,33 @@ class PostController extends Controller
     }
 
 
-    public function update(PostRequest $request, $id)
+    public function update(Request $request, $id)
     {
+
+        // $data = Posts::find(Auth::id())->user->post_icon;
+
+
         $userid = Auth::user()->id;
         $posts = Posts::find($id);
 
-        if ($request->file('post_icon')) {
-            $file = $request->file('post_icon');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(storage_path('app/public/posts/'), $filename);
-        }
+        // dd($posts->post_icon);
 
         $postupdate = [
             'user_id' => $userid,
             'title' => $request->title,
             'description' => $request->description,
-            'post_icon' => $filename,
+            // 'post_icon' => $filename,
         ];
+
+        if($request->hasFile('post_icon'))
+        {
+            $file = $request->file('post_icon');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(storage_path('app/public/posts/'), $filename);
+            $postupdate['post_icon']=$filename;
+        }
+
+
 
         $posts->update($postupdate);
         // dd($postupdate);

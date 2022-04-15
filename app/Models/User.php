@@ -11,8 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens;
- 
-    
+
+
     protected $fillable = [
         'name',
         'email',
@@ -23,5 +23,15 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    
+    // public function username(){
+    //     return $this->hasMany(Posts::class,'user_id','id');
+    // }
+
+
+
+    public function posts(){
+        return $this->hasMany(Posts::class);
+    }
+
+
 }

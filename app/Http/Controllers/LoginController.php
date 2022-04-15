@@ -22,7 +22,9 @@ class LoginController extends Controller
         return view('login');
     }
 
-    
+
+
+
     public function store(Request $request)
     {
         $credentials = $request->validate([
@@ -34,7 +36,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('userprofile');
+            return redirect()->intended('/');
         };
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -50,6 +52,8 @@ class LoginController extends Controller
             200
         );
     }
+
+
 
 
 }

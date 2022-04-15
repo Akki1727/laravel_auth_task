@@ -58,7 +58,7 @@
     </div>
     <div class="container-sm">
       <label class="form-label" for="userprofile">User Profile:</label>
-      <input class="form-control" type="file" name="profile_photo" id="profile_photo">
+      <input class="form-control" type="file"  name="profile_photo" id="profile_photo">
 
       @error('profile_photo')
       <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>

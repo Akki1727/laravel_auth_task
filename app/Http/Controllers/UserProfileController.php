@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
@@ -24,7 +24,10 @@ class UserProfileController extends Controller
     public function store(UserProfileRequest $request)
     {
 
-        $usereditid = Auth::user()->id;
+        $usereditid = Auth::id();
+        // return $usereditid;
+
+
 
         $validatedData = $request->validate([
             'profile_photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
@@ -73,24 +76,37 @@ class UserProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // File::delete(storage_path('app/public/images/').$request->file('profile_photo'));
+
         $useredit = Auth::user();
         $userid = User::find($id)->usersprofile;
-// return $id;
-        // dd($userid);
 
-        if ($request->file('profile_photo')) {
-            $file = $request->file('profile_photo');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(storage_path('app/public/images/'), $filename);
-        }
+
+        $data = User::find(Auth::id())->usersprofile->name;
+
+        // dd($data);
+
+
+        // return $id;
+        // dd($userid);
 
         $updatedata = [
             // 'user_id' => $userprofile,
             'gender' => $request->gender,
             'address' => $request->address,
-            'profile_photo' => $filename,
+
             'birth_date' => $request->birth_date
         ];
+
+        if($request->hasFile('profile_photo'))
+        {
+            $file = $request->file('profile_photo');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(storage_path('app/public/images/'), $filename);
+            $updatedata['profile_photo']=$filename;
+        }
+// return $updatedata;
+
 
 
         $userid->update($updatedata);
@@ -98,7 +114,9 @@ class UserProfileController extends Controller
         // $userprofile = ModelsUserProfile::find($result->id);
         // dd($userid);
         // dd($userid);
-        return view('userprofileupdateshow', compact(['useredit', 'userid']));
+        $authusername = Auth::user();
+
+        return view('userprofileupdateshow', compact(['useredit', 'userid','authusername','data']));
     }
 
 

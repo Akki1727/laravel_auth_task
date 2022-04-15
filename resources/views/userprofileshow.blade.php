@@ -15,7 +15,8 @@
 </head>
 
 <body>
-
+<a class="btn btn-primary" href="{{route('posts.create')}}" style="margin-top: 10px; margin-bottom:10px; margin-left:10px;">Create Post</a>
+<a href="/" class="btn btn-secondary" style="float: right; margin-top: 10px; margin-bottom:10px; margin-right:10px;">Go Home</a>
   <table border="1" class="table table-striped" style="width: 100%; text-align:center">
     <tr>
       <th scope="col">Id</th>
@@ -32,16 +33,12 @@
       <td>{{$authusername->name}}</td>
       <td>{{$userprofile->gender}}</td>
       <td>{{$userprofile->address}}</td>
-      <td><img src="{{asset('/storage/posts/'.$result->profile_photo)}}" style="height: 100px; width: 150px;"></td>
+      <td><img src="{{asset('/storage/images/'.$result->profile_photo)}}" style="height: 100px; width: 150px;"></td>
       
       <td>{{$userprofile->birth_date}}</td>
       <td><a class="btn btn-primary" href="{{route('userprofile.edit',$result->id)}}">Edit/Update</a></td>
     </tr>
-    <tr>
-      <td>
-        <a class="btn btn-primary" href="{{route('posts.create')}}">Create Post</a>
-      </td>
-    </tr>
+   
   </table>
 
 

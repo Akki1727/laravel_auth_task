@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\ResetPassword;
+use App\Models\Posts;
 
 class UserController extends Controller
 {
@@ -29,6 +30,22 @@ class UserController extends Controller
         return view('Users');
     }
 
+    public function home(){
+
+
+        // $posts = Posts::;
+
+
+        $posts = Posts::with('user')->orderBy('id', 'DESC')->paginate(2);
+
+
+
+        // // $name = $data->name;
+        // dd($data[0]->user->name);
+
+
+        return view('welcome',compact(['posts']))->with('no',1);
+    }
 
 
     public function store(UserRequest $request)

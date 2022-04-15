@@ -37,7 +37,7 @@ class UserProfileRequest extends FormRequest
            'gender.required'=>'Choose One Option',
            'address.required'=>'please enter address in proper format',
            'profile_photo.required'=>'',
-           'birth_date.required'=>'valid formate' 
+           'birth_date.required'=>'valid formate'
         ];
     }
 }

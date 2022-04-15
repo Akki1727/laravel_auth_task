@@ -15,7 +15,21 @@ class Posts extends Model
         'post_icon',
     ];
 
-    public function users(){
-        return $this->hasMany(User::class);
+    protected $table ='posts';
+
+    // public function users()
+    // {
+    //     return $this->hasMany(User::class);
+    // }
+
+    public function post_photo()
+    {
+        return $this->hasOne(Posts::class);
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
